@@ -1,0 +1,36 @@
+---
+- name: Remove client config
+  file:
+    path: "{{ openvpn_ovpn_dir }}/{{ item }}-{{ ansible_hostname }}.ovpn"
+    state: absent
+    force: true
+  with_items:
+    - '{{ openvpn_revoke_these_certs }}'
+    - '{{ additional_certs_to_revoke }}'
+
+- name: Revoke certificates
+  command: sh revoke.sh {{ item }}.crt
+  changed_when: true
+  args:
+    chdir: "{{ openvpn_key_dir }}"
+  with_items:
+    - '{{ openvpn_revoke_these_certs }}'
+    - '{{ additional_certs_to_revoke }}'
+
+- name: Remove client key
+  file:
+    path: "{{ openvpn_key_dir }}/{{ item }}.key"
+    state: absent
+    force: true
+  with_items:
+    - '{{ openvpn_revoke_these_certs }}'
+    - '{{ additional_certs_to_revoke }}'
+
+- name: Remove client csr
+  file:
+    path: "{{ openvpn_key_dir }}/{{ item }}.csr"
+    state: absent
+    force: true
+  with_items:
+    - '{{ openvpn_revoke_these_certs }}'
+    - '{{ additional_certs_to_revoke }}'
