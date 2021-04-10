@@ -1,0 +1,60 @@
+dev tun
+
+{% if openvpn_client_keepalive is defined %}
+keepalive {{ openvpn_client_keepalive }}
+{% endif %}
+
+persist-tun
+persist-key
+
+cipher {{ openvpn_client_cipher }}
+ncp-ciphers {{openvpn_client_ncp_ciphers}}
+auth {{ openvpn_client_auth }}
+
+tls-client
+client
+resolv-retry infinite
+remote-cert-tls {{ openvpn_client_remote_cert_tls }}
+
+{% if openvpn_auth_user_pass %}
+auth-user-pass
+{% endif %}
+
+remote {{ openvpn_remote }} {{ openvpn_port }} {{ openvpn_proto }}-client
+
+{% if openvpn_client_compress is defined %}
+compress {{ openvpn_client_compress }}
+{% endif %}
+
+{% if openvpn_client_verify_x509_name is defined %}
+verify-x509-name "{{ openvpn_client_verify_x509_name }}" name
+{% endif %}
+
+{% for route in openvpn_route %}
+route {{ route }}
+{% endfor %}
+
+{% if openvpn_ca is defined %}
+<ca>
+{{ openvpn_ca }}
+</ca>
+{% endif %}
+
+{% if openvpn_cert is defined %}
+<cert>
+{{ openvpn_cert }}
+</cert>
+{% endif %}
+
+{% if openvpn_key is defined %}
+<key>
+{{ openvpn_key }}
+</key>
+{% endif %}
+
+{% if openvpn_tlsauth is defined %}
+<tls-auth>
+{{ openvpn_tlsauth }}
+</tls-auth>
+key-direction 1
+{% endif %}
