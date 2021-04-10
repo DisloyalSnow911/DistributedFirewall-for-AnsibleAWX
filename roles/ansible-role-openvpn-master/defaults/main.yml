@@ -8,4 +8,4 @@
 
 # If you are configuring a client, setup these variables:
  openvpn_role: client
- openvpn_client_server: vpn.example.com
+ openvpn_client_server: 10.8.0.1
